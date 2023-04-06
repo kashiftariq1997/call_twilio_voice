@@ -11,10 +11,9 @@ typedef OnDeviceTokenChanged = Function(String token);
 
 class TwilioVoice {
   static const MethodChannel _channel =
-      const MethodChannel('twilio_voice_t/messages');
+      const MethodChannel('twilio_voice/messages');
 
-  static const EventChannel _eventChannel =
-      EventChannel('twilio_voice_t/events');
+  static const EventChannel _eventChannel = EventChannel('twilio_voice/events');
 
   TwilioVoice._() : call = Call(_channel);
 
