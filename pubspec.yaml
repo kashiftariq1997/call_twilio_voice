@@ -1,7 +1,7 @@
-name: twilio_voice
+name: call_twilio_voice
 description: Provides an interface to Twilio's Programmable Voice SDK to allow adding voice-over-IP (VoIP) calling into your Flutter applications.
 version: 0.0.9
-homepage: https://github.com/diegogarciar/twilio_voice
+homepage: https://github.com/kashiftariq1997/call_twilio_voice.git
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -28,9 +28,9 @@ flutter:
     platforms:
       android:
         package: com.twilio.twilio_voice
-        pluginClass: TwilioVoicePlugin
+        pluginClass: CallTwilioVoicePlugin
       ios:
-        pluginClass: TwilioVoicePlugin
+        pluginClass: CallTwilioVoicePlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

@@ -51,11 +51,11 @@ import io.flutter.plugin.common.PluginRegistry;
 
 import static java.lang.Boolean.getBoolean;
 
-public class TwilioVoicePlugin implements FlutterPlugin, MethodChannel.MethodCallHandler, EventChannel.StreamHandler,
+public class CallTwilioVoicePlugin implements FlutterPlugin, MethodChannel.MethodCallHandler, EventChannel.StreamHandler,
         ActivityAware, PluginRegistry.NewIntentListener {
 
-    private static final String CHANNEL_NAME = "twilio_voice";
-    private static final String TAG = "TwilioVoicePlugin";
+    private static final String CHANNEL_NAME = "call_twilio_voice";
+    private static final String TAG = "CallTwilioVoicePlugin";
     public static final String TwilioPreferences = "com.twilio.twilio_voicePreferences";
     private static final int MIC_PERMISSION_REQUEST_CODE = 1;
     static boolean hasStarted = false;
@@ -94,7 +94,7 @@ public class TwilioVoicePlugin implements FlutterPlugin, MethodChannel.MethodCal
         hasStarted = true;
     }
 
-    private static void register(BinaryMessenger messenger, TwilioVoicePlugin plugin, Context context) {
+    private static void register(BinaryMessenger messenger, CallTwilioVoicePlugin plugin, Context context) {
         Log.d(TAG, "register(BinaryMessenger");
         plugin.methodChannel = new MethodChannel(messenger, CHANNEL_NAME + "/messages");
         plugin.methodChannel.setMethodCallHandler(plugin);
@@ -288,9 +288,9 @@ public class TwilioVoicePlugin implements FlutterPlugin, MethodChannel.MethodCal
 
     private static class VoiceBroadcastReceiver extends BroadcastReceiver {
 
-        private final TwilioVoicePlugin plugin;
+        private final CallTwilioVoicePlugin plugin;
 
-        private VoiceBroadcastReceiver(TwilioVoicePlugin plugin) {
+        private VoiceBroadcastReceiver(CallTwilioVoicePlugin plugin) {
             this.plugin = plugin;
         }
 

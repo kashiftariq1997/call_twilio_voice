@@ -193,7 +193,7 @@ public class AnswerJavaActivity extends AppCompatActivity {
         acceptIntent.putExtra(Constants.INCOMING_CALL_NOTIFICATION_ID, activeCallNotificationId);
         Log.d(TAG, "Clicked accept startService");
         startService(acceptIntent);
-        if (TwilioVoicePlugin.hasStarted) {
+        if (CallTwilioVoicePlugin.hasStarted) {
             finish();
         } else {
             Log.d(TAG, "Answering call");

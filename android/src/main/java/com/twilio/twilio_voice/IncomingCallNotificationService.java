@@ -322,7 +322,7 @@ public class IncomingCallNotificationService extends Service {
         pluginIntent.putExtra(Constants.INCOMING_CALL_NOTIFICATION_ID, notificationId);
         pluginIntent.putExtra(Constants.INCOMING_CALL_INVITE, callInvite);
         LocalBroadcastManager.getInstance(this).sendBroadcast(pluginIntent);
-        if (TwilioVoicePlugin.hasStarted || (Build.VERSION.SDK_INT >= 29 && !isAppVisible())) {
+        if (CallTwilioVoicePlugin.hasStarted || (Build.VERSION.SDK_INT >= 29 && !isAppVisible())) {
             return;
         }
         startAnswerActivity(callInvite, notificationId);
