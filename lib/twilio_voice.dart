@@ -128,6 +128,18 @@ class TwilioVoice {
     } else if (state.startsWith("LOG|")) {
       List<String> tokens = state.split('|');
       print(tokens[1]);
+
+      // source: https://www.twilio.com/docs/api/errors/31603
+      // The callee does not wish to participate in the call.
+      if (tokens[1].contains("31603")) {
+        return CallEvent.declined;
+      } else if (tokens.toString().toLowerCase().contains("call rejected")) {
+        // Android call reject from string: "LOG|Call Rejected"
+        return CallEvent.declined;
+      } else if (tokens.toString().toLowerCase().contains("rejecting call")) {
+        // iOS call reject froms tring: "LOG|provider:performEndCallAction: rejecting call"
+        return CallEvent.declined;
+      }
       return CallEvent.log;
     } else if (state.startsWith("Connected|")) {
       call._activeCall = createCallFromState(state, initiated: true);
@@ -243,6 +255,12 @@ class Call {
   Future<bool> isOnCall() {
     return _channel.invokeMethod<bool?>('isOnCall',
         <String, dynamic>{}).then<bool>((bool? value) => value ?? false);
+  }
+
+  /// Gets the active call's SID. This will be null until the first Ringing event occurs
+  Future<String?> getSid() {
+    return _channel.invokeMethod<String?>('call-sid',
+        <String, dynamic>{}).then<String?>((String? value) => value);
   }
 
   /// Answers incoming call

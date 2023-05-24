@@ -34,7 +34,7 @@ import com.twilio.voice.CallInvite;
 public class AnswerJavaActivity extends AppCompatActivity {
 
     private static String TAG = "AnswerActivity";
-    public static final String TwilioPreferences = "mx.TwilioPreferences";
+    public static final String TwilioPreferences = "com.twilio.twilio_voicePreferences";
 
     private NotificationManager notificationManager;
     private boolean isReceiverRegistered = false;
@@ -132,8 +132,8 @@ public class AnswerJavaActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        Log.d(TAG, "onNewIntent-");
         if (intent != null && intent.getAction() != null) {
-            Log.d(TAG, "onNewIntent-");
             Log.d(TAG, intent.getAction());
             switch (intent.getAction()) {
                 case Constants.ACTION_CANCEL_CALL:
@@ -197,10 +197,8 @@ public class AnswerJavaActivity extends AppCompatActivity {
             finish();
         } else {
             Log.d(TAG, "Answering call");
-
             activeCallInvite.accept(this, callListener);
             notificationManager.cancel(activeCallNotificationId);
-
         }
     }
 
@@ -298,7 +296,7 @@ public class AnswerJavaActivity extends AppCompatActivity {
     }
 
     private void registerReceiver() {
-        Log.d(TAG, "Registering receiver");
+        Log.d(TAG, "Registering answerJavaActivity receiver");
         if (!isReceiverRegistered) {
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(Constants.ACTION_TOGGLE_MUTE);
