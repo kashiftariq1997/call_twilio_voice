@@ -1,4 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.twilio.twilio_voice">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.twilio.twilio_voice">
 
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
@@ -8,9 +10,11 @@
   <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
   <application>
 
-    <activity android:name=".AnswerJavaActivity" android:turnScreenOn="true" android:showWhenLocked="true" android:showOnLockScreen="true" android:theme="@style/Theme.AppCompat" />
+    <activity android:name=".AnswerJavaActivity" android:turnScreenOn="true" android:showWhenLocked="true" android:showOnLockScreen="true" android:theme="@style/Theme.AppCompat"
+        tools:targetApi="o_mr1" />
 
-    <activity android:name=".BackgroundCallJavaActivity" android:turnScreenOn="true" android:showWhenLocked="true" android:showOnLockScreen="true" android:theme="@style/Theme.AppCompat" />
+    <activity android:name=".BackgroundCallJavaActivity" android:turnScreenOn="true" android:showWhenLocked="true" android:showOnLockScreen="true" android:theme="@style/Theme.AppCompat"
+        tools:targetApi="o_mr1" />
 
     <service android:enabled="true" android:name=".IncomingCallNotificationService"
         android:exported="false">
