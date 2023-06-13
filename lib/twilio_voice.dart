@@ -2,6 +2,7 @@ library twilio_voice;
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/services.dart';
 
 part 'models/active_call.dart';
@@ -12,6 +13,8 @@ typedef OnDeviceTokenChanged = Function(String token);
 class TwilioVoice {
   static const MethodChannel _channel =
       const MethodChannel('twilio_voice/messages');
+  static const MethodChannel _channelMicFourgroundService =
+      const MethodChannel('com.carrat.ch/micService');
 
   static const EventChannel _eventChannel = EventChannel('twilio_voice/events');
 
@@ -37,6 +40,31 @@ class TwilioVoice {
   OnDeviceTokenChanged? deviceTokenChanged;
   void setOnDeviceTokenChanged(OnDeviceTokenChanged deviceTokenChanged) {
     deviceTokenChanged = deviceTokenChanged;
+  }
+
+  /// Request microphone permission
+  Future<bool?> requestMicForegroundAccess() {
+    if (Platform.isAndroid) {
+      return _channelMicFourgroundService.invokeMethod('startMicService', {});
+    }
+    return Future.value(null);
+  }
+
+  // Request microphone permission
+  Future<bool?> startForeground() {
+    if (Platform.isAndroid) {
+      return _channelMicFourgroundService
+          .invokeMethod('startforegroundService', {});
+    }
+    return Future.value(null);
+  }
+
+  /// Request to stope microphone permission
+  Future<bool?> requestStopMicForegroundAccess() {
+    if (Platform.isAndroid) {
+      return _channelMicFourgroundService.invokeMethod('stopMicService', {});
+    }
+    return Future.value(null);
   }
 
   /// register fcm token, and device token for android
