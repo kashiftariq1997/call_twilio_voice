@@ -2,6 +2,7 @@ library twilio_voice;
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/services.dart';
 
 part 'models/active_call.dart';
@@ -12,6 +13,8 @@ typedef OnDeviceTokenChanged = Function(String token);
 class TwilioVoice {
   static const MethodChannel _channel =
       const MethodChannel('twilio_voice/messages');
+  static const MethodChannel _channelMicFourgroundService =
+      const MethodChannel('com.carrat.ch/micService');
 
   static const EventChannel _eventChannel = EventChannel('twilio_voice/events');
 
@@ -37,6 +40,31 @@ class TwilioVoice {
   OnDeviceTokenChanged? deviceTokenChanged;
   void setOnDeviceTokenChanged(OnDeviceTokenChanged deviceTokenChanged) {
     deviceTokenChanged = deviceTokenChanged;
+  }
+
+  /// Request microphone permission
+  Future<bool?> requestMicForegroundAccess() {
+    if (Platform.isAndroid) {
+      return _channelMicFourgroundService.invokeMethod('startMicService', {});
+    }
+    return Future.value(null);
+  }
+
+  // Request microphone permission
+  Future<bool?> startForeground() {
+    if (Platform.isAndroid) {
+      return _channelMicFourgroundService
+          .invokeMethod('startforegroundService', {});
+    }
+    return Future.value(null);
+  }
+
+  /// Request to stope microphone permission
+  Future<bool?> requestStopMicForegroundAccess() {
+    if (Platform.isAndroid) {
+      return _channelMicFourgroundService.invokeMethod('stopMicService', {});
+    }
+    return Future.value(null);
   }
 
   /// register fcm token, and device token for android
@@ -128,6 +156,21 @@ class TwilioVoice {
     } else if (state.startsWith("LOG|")) {
       List<String> tokens = state.split('|');
       print(tokens[1]);
+
+      // source: https://www.twilio.com/docs/api/errors/31603
+      // The callee does not wish to participate in the call.
+      //
+      // https://www.twilio.com/docs/api/errors/31486
+      // The callee is busy.
+      if (tokens[1].contains("31603") || tokens[1].contains("31486")) {
+        return CallEvent.declined;
+      } else if (tokens.toString().toLowerCase().contains("call rejected")) {
+        // Android call reject from string: "LOG|Call Rejected"
+        return CallEvent.declined;
+      } else if (tokens.toString().toLowerCase().contains("rejecting call")) {
+        // iOS call reject froms tring: "LOG|provider:performEndCallAction: rejecting call"
+        return CallEvent.declined;
+      }
       return CallEvent.log;
     } else if (state.startsWith("Connected|")) {
       call._activeCall = createCallFromState(state, initiated: true);
@@ -243,6 +286,12 @@ class Call {
   Future<bool> isOnCall() {
     return _channel.invokeMethod<bool?>('isOnCall',
         <String, dynamic>{}).then<bool>((bool? value) => value ?? false);
+  }
+
+  /// Gets the active call's SID. This will be null until the first Ringing event occurs
+  Future<String?> getSid() {
+    return _channel.invokeMethod<String?>('call-sid',
+        <String, dynamic>{}).then<String?>((String? value) => value);
   }
 
   /// Answers incoming call
