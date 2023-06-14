@@ -50,15 +50,6 @@ class TwilioVoice {
     return Future.value(null);
   }
 
-  // Request microphone permission
-  Future<bool?> startForeground() {
-    if (Platform.isAndroid) {
-      return _channelMicFourgroundService
-          .invokeMethod('startforegroundService', {});
-    }
-    return Future.value(null);
-  }
-
   /// Request to stope microphone permission
   Future<bool?> requestStopMicForegroundAccess() {
     if (Platform.isAndroid) {
